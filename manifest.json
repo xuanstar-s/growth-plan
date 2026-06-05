@@ -1,10 +1,10 @@
 {
-  "name": "成长计划",
-  "short_name": "成长计划",
-  "start_url": "index.html",
+  "name": "控糖护肤计划",
+  "short_name": "控糖护肤",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#f6f1e8",
-  "theme_color": "#f6f1e8",
+  "background_color": "#f4f6f1",
+  "theme_color": "#f4f6f1",
   "lang": "zh-CN",
   "icons": [
     {

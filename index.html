@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#f6f1e8">
+    <meta name="theme-color" content="#f4f6f1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="成长计划">
+    <meta name="apple-mobile-web-app-title" content="控糖护肤计划">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>成长计划</title>
+    <title>控糖护肤计划</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.svg">
     <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -18,121 +18,110 @@
       <header class="topbar">
         <div>
           <p class="eyebrow" id="todayLabel">今日</p>
-          <h1>成长计划</h1>
+          <h1>控糖护肤计划</h1>
         </div>
-        <button class="icon-button" id="resetDayBtn" type="button" aria-label="恢复今日模板" title="恢复今日模板">
-          <span aria-hidden="true">↻</span>
-        </button>
+        <button class="icon-button" id="resetTodayBtn" type="button" aria-label="重置今天记录" title="重置今天记录">↻</button>
       </header>
 
-      <section class="hero-panel" aria-labelledby="focusTitle">
-        <div class="focus-copy">
-          <p class="section-kicker">今日主线</p>
-          <h2 id="focusTitle">用镜头记录一个情绪</h2>
-          <p>先练分镜语言，再慢慢出镜。今天只需要完成一个小闭环。</p>
+      <section class="hero-panel" aria-labelledby="statusTitle">
+        <div>
+          <p class="section-kicker">Today</p>
+          <h2 id="statusTitle">先稳住今天</h2>
+          <p id="todaySummary">完成一次记录，开始观察糖分、睡眠和皮肤状态。</p>
         </div>
-        <div class="camera-frame" aria-hidden="true">
-          <span></span>
+        <div class="streak-badge" aria-label="连续控糖天数">
+          <strong id="streakCount">0</strong>
+          <span>连续天</span>
         </div>
       </section>
 
-      <section class="progress-strip" aria-label="今日完成度">
+      <section class="metrics-strip" aria-label="最近七天趋势">
         <div>
-          <strong id="doneCount">0</strong>
-          <span>已完成</span>
+          <strong id="successDays">0/7</strong>
+          <span>控糖成功</span>
         </div>
         <div>
-          <strong id="totalCount">0</strong>
-          <span>总任务</span>
+          <strong id="avgAcne">-</strong>
+          <span>平均痘痘</span>
         </div>
         <div>
-          <strong id="completionRate">0%</strong>
-          <span>完成度</span>
+          <strong id="avgOil">-</strong>
+          <span>平均出油</span>
         </div>
       </section>
 
-      <section class="planner-section reminder-section" aria-labelledby="reminderTitle">
+      <section class="tracker-section" aria-labelledby="sugarTitle">
         <div class="section-heading">
           <div>
-            <p class="section-kicker">Reminder</p>
-            <h2 id="reminderTitle">打卡提醒</h2>
+            <p class="section-kicker">Sugar</p>
+            <h2 id="sugarTitle">今日控糖</h2>
           </div>
-          <button class="text-button" id="reminderToggleBtn" type="button">开启</button>
+          <span class="save-status" id="saveStatus">已同步到本机</span>
         </div>
-        <div class="reminder-card">
-          <div class="reminder-time">
-            <strong>09:30</strong>
-            <span>每日早上</span>
-          </div>
-          <p id="reminderStatus">提醒未开启</p>
+
+        <div class="segmented-control" role="group" aria-label="控糖结果">
+          <button id="successBtn" type="button" data-value="success">成功</button>
+          <button id="missBtn" type="button" data-value="miss">破戒</button>
         </div>
+
+        <div class="chip-grid" id="sourceGrid" aria-label="高糖来源"></div>
+
+        <label class="field">
+          一句记录
+          <input id="sugarNoteInput" maxlength="48" placeholder="例如：下午想喝奶茶，换成无糖茶">
+        </label>
       </section>
 
-      <section class="planner-section" aria-labelledby="planTitle">
+      <section class="tracker-section" aria-labelledby="skinTitle">
         <div class="section-heading">
           <div>
-            <p class="section-kicker">Daily</p>
-            <h2 id="planTitle">今日计划</h2>
+            <p class="section-kicker">Skin</p>
+            <h2 id="skinTitle">痘痘观察</h2>
           </div>
-          <button class="text-button" id="addTaskBtn" type="button">添加</button>
         </div>
 
-        <form class="task-form is-hidden" id="taskForm">
-          <label>
-            任务内容
-            <input id="taskText" maxlength="40" placeholder="例如：拍 5 个通勤镜头">
-          </label>
-          <label>
-            时间段
-            <select id="taskSlot">
-              <option value="下班后">下班后</option>
-              <option value="午休">午休</option>
-              <option value="晚上">晚上</option>
-              <option value="周末">周末</option>
-            </select>
-          </label>
-          <div class="form-actions">
-            <button class="ghost-button" id="cancelTaskBtn" type="button">取消</button>
-            <button class="primary-button" type="submit">保存任务</button>
-          </div>
-        </form>
+        <div class="score-list" id="scoreList"></div>
 
+        <label class="switch-row">
+          <span>
+            <strong>大痘/破溃痘</strong>
+            <small>今天是否需要重点保护</small>
+          </span>
+          <input id="largePimpleInput" type="checkbox">
+        </label>
+
+        <label class="field">
+          皮肤备注
+          <textarea id="skinNoteInput" rows="3" maxlength="80" placeholder="例如：右脸大痘已结痂，今天没有再挤"></textarea>
+        </label>
+      </section>
+
+      <section class="tracker-section" aria-labelledby="taskTitle">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Tasks</p>
+            <h2 id="taskTitle">今日小任务</h2>
+          </div>
+          <strong id="taskProgress">0/4</strong>
+        </div>
         <div class="task-list" id="taskList"></div>
       </section>
 
-      <section class="planner-section" aria-labelledby="shotTitle">
-        <div class="section-heading">
-          <div>
-            <p class="section-kicker">Shot</p>
-            <h2 id="shotTitle">分镜训练</h2>
-          </div>
-        </div>
-        <div class="shot-grid" id="shotGrid"></div>
-      </section>
-
-      <section class="planner-section" aria-labelledby="reviewTitle">
+      <section class="tracker-section" aria-labelledby="reviewTitle">
         <div class="section-heading">
           <div>
             <p class="section-kicker">Review</p>
-            <h2 id="reviewTitle">情绪复盘</h2>
+            <h2 id="reviewTitle">最近 7 天</h2>
           </div>
-          <button class="text-button" id="saveReviewBtn" type="button">保存</button>
         </div>
-        <label class="review-field">
-          今天想表达的情绪
-          <input id="moodInput" maxlength="18" placeholder="例如：累，但没有停下">
-        </label>
-        <label class="review-field">
-          一句旁白
-          <textarea id="voiceInput" rows="3" maxlength="80" placeholder="例如：我发现自己不是不想努力，只是太急着看到结果。"></textarea>
-        </label>
+        <div class="trend-list" id="trendList"></div>
       </section>
     </main>
 
     <nav class="bottom-nav" aria-label="快捷导航">
-      <a href="#planTitle">计划</a>
-      <a href="#shotTitle">分镜</a>
-      <a href="#reviewTitle">复盘</a>
+      <a href="#sugarTitle">控糖</a>
+      <a href="#skinTitle">皮肤</a>
+      <a href="#reviewTitle">趋势</a>
     </nav>
 
     <script src="app.js"></script>

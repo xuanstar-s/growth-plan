@@ -1,4 +1,4 @@
-const CACHE_NAME = "growth-plan-v3";
+const CACHE_NAME = "sugar-skin-v1";
 const FILES = [
   "./",
   "./index.html",
@@ -38,9 +38,4 @@ self.addEventListener("message", (event) => {
   if (event.data === "SKIP_WAITING") {
     self.skipWaiting();
   }
-});
-
-self.addEventListener("notificationclick", (event) => {
-  event.notification.close();
-  event.waitUntil(clients.openWindow("./index.html"));
 });
