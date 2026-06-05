@@ -1,4 +1,4 @@
-const CACHE_NAME = "sugar-skin-v1";
+const CACHE_NAME = "sugar-plan-v2";
 const FILES = [
   "./",
   "./index.html",

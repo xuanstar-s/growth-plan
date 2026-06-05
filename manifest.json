@@ -1,6 +1,6 @@
 {
-  "name": "控糖护肤计划",
-  "short_name": "控糖护肤",
+  "name": "控糖计划",
+  "short_name": "控糖计划",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#f4f6f1",

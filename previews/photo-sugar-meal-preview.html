@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>控糖计划功能预览</title>
+    <style>
+      :root {
+        --paper: #f4f6f1;
+        --surface: #fffdf8;
+        --ink: #20252b;
+        --muted: #687078;
+        --line: #d9dfd2;
+        --green: #2f6f5e;
+        --amber: #c58a2c;
+        --red: #b9574f;
+        --blue: #2f5f8f;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
+
+      main {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 32px 20px 46px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      .intro {
+        margin-bottom: 24px;
+      }
+
+      .intro h1 {
+        font-size: 30px;
+      }
+
+      .intro p {
+        margin-top: 8px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(260px, 1fr));
+        gap: 22px;
+        align-items: start;
+      }
+
+      .phone {
+        min-height: 720px;
+        border: 10px solid #191f24;
+        border-radius: 34px;
+        background: var(--paper);
+        box-shadow: 0 18px 42px rgba(20, 25, 22, 0.16);
+        overflow: hidden;
+      }
+
+      .screen {
+        padding: 18px 14px 20px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+
+      .eyebrow {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .topbar h2 {
+        margin-top: 3px;
+        font-size: 22px;
+      }
+
+      .card {
+        margin-top: 12px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--surface);
+      }
+
+      .card h3 {
+        font-size: 17px;
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 9px;
+      }
+
+      .muted {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .total {
+        font-size: 28px;
+        font-weight: 900;
+      }
+
+      .bar {
+        position: relative;
+        height: 14px;
+        margin-top: 12px;
+        border-radius: 999px;
+        background: #e7ecdf;
+        overflow: hidden;
+      }
+
+      .bar span {
+        display: block;
+        width: 82%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--green) 0 48%, var(--amber) 48% 72%, var(--red) 72%);
+      }
+
+      .button {
+        display: grid;
+        place-items: center;
+        min-height: 46px;
+        margin-top: 14px;
+        border-radius: 9px;
+        background: var(--green);
+        color: #fff;
+        font-weight: 900;
+      }
+
+      .ghost {
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--green);
+      }
+
+      .photo {
+        display: grid;
+        place-items: center;
+        min-height: 128px;
+        border-radius: 10px;
+        background:
+          radial-gradient(circle at 64% 52%, #b9574f 0 18px, transparent 19px),
+          radial-gradient(circle at 44% 56%, #f1d7a4 0 28px, transparent 29px),
+          linear-gradient(145deg, #e8f2ed, #fff7e8);
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      .chips {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .chip {
+        min-height: 36px;
+        padding: 8px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        font-size: 12px;
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .chip.active {
+        border-color: var(--amber);
+        background: #fff3dc;
+        color: #70430d;
+      }
+
+      .risk {
+        color: var(--red);
+        font-size: 24px;
+        font-weight: 900;
+      }
+
+      .inputs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .input {
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .meal {
+        margin-top: 10px;
+        padding: 11px;
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        background: #fff;
+      }
+
+      .meal h3 {
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .item {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        margin-top: 8px;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .delete {
+        color: var(--red);
+        font-size: 12px;
+      }
+
+      .warning {
+        margin-top: 8px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      @media (max-width: 900px) {
+        .flow {
+          grid-template-columns: 1fr;
+        }
+
+        .phone {
+          max-width: 390px;
+          margin: 0 auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="intro">
+        <h1>控糖计划：拍照估算 + 多餐次累加预览</h1>
+        <p>这是一张功能预览，不是最终代码截图。目标是在 iPhone 上快速拍照、选择餐次和食物类型，并用 25g/天控制线追踪当天糖分摄入。</p>
+      </section>
+
+      <section class="flow">
+        <article class="phone">
+          <div class="screen">
+            <header class="topbar">
+              <div>
+                <p class="eyebrow">Sugar</p>
+                <h2>今日控糖</h2>
+              </div>
+              <span class="muted">已同步</span>
+            </header>
+
+            <section class="card">
+              <h3>今日糖分控制</h3>
+              <div class="row">
+                <div>
+                  <p class="muted">估算摄入</p>
+                  <p class="total">18-32g</p>
+                </div>
+                <div class="muted">目标 ≤ 25g</div>
+              </div>
+              <div class="bar"><span></span></div>
+              <p class="warning">接近/可能超过目标</p>
+            </section>
+
+            <section class="card">
+              <h3>拍照估算糖分</h3>
+              <p class="muted">拍食物或饮品，选择餐次后写入今日记录。</p>
+              <div class="button">拍照估算糖分</div>
+            </section>
+          </div>
+        </article>
+
+        <article class="phone">
+          <div class="screen">
+            <header class="topbar">
+              <div>
+                <p class="eyebrow">Estimate</p>
+                <h2>识别确认</h2>
+              </div>
+            </header>
+
+            <section class="card">
+              <div class="photo">食物照片预览</div>
+              <div class="chips">
+                <div class="chip">早餐</div>
+                <div class="chip active">午餐</div>
+                <div class="chip">晚餐</div>
+                <div class="chip">加餐/饮品</div>
+              </div>
+            </section>
+
+            <section class="card">
+              <h3>选择类别</h3>
+              <div class="chips">
+                <div class="chip active">奶茶/甜饮</div>
+                <div class="chip">甜点/糖果</div>
+                <div class="chip">外卖主食</div>
+                <div class="chip">零食</div>
+                <div class="chip">水果</div>
+                <div class="chip">其它</div>
+              </div>
+            </section>
+
+            <section class="card">
+              <p class="risk">高糖风险</p>
+              <p class="muted">估算糖分范围</p>
+              <div class="inputs">
+                <div class="input">最低 25g</div>
+                <div class="input">最高 60g</div>
+              </div>
+              <div class="button">写入今日记录</div>
+              <div class="button ghost">重新拍照</div>
+            </section>
+          </div>
+        </article>
+
+        <article class="phone">
+          <div class="screen">
+            <header class="topbar">
+              <div>
+                <p class="eyebrow">Today</p>
+                <h2>摄入记录</h2>
+              </div>
+            </header>
+
+            <section class="card">
+              <h3>今日累计</h3>
+              <p class="total">33-85g / 25g</p>
+              <div class="bar"><span></span></div>
+              <p class="warning">已超过目标，今日控糖标记为破戒</p>
+            </section>
+
+            <section class="meal">
+              <h3><span>早餐</span><span>无记录</span></h3>
+            </section>
+
+            <section class="meal">
+              <h3><span>午餐</span><span>25-60g</span></h3>
+              <div class="item">
+                <span>奶茶/甜饮</span>
+                <span class="delete">删除</span>
+              </div>
+            </section>
+
+            <section class="meal">
+              <h3><span>晚餐</span><span>待记录</span></h3>
+            </section>
+
+            <section class="meal">
+              <h3><span>加餐/饮品</span><span>8-25g</span></h3>
+              <div class="item">
+                <span>水果</span>
+                <span class="delete">删除</span>
+              </div>
+            </section>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

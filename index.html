@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#f4f6f1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="控糖护肤计划">
+    <meta name="apple-mobile-web-app-title" content="控糖计划">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>控糖护肤计划</title>
+    <title>控糖计划</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -18,7 +18,7 @@
       <header class="topbar">
         <div>
           <p class="eyebrow" id="todayLabel">今日</p>
-          <h1>控糖护肤计划</h1>
+          <h1>控糖计划</h1>
         </div>
         <button class="icon-button" id="resetTodayBtn" type="button" aria-label="重置今天记录" title="重置今天记录">↻</button>
       </header>
@@ -59,6 +59,78 @@
           <span class="save-status" id="saveStatus">已同步到本机</span>
         </div>
 
+        <section class="budget-card" id="sugarBudgetCard" aria-labelledby="budgetTitle">
+          <div class="budget-head">
+            <div>
+              <h3 id="budgetTitle">今日糖分控制</h3>
+              <p id="sugarBudgetRange">估算 0-0g / 25g</p>
+            </div>
+            <label>
+              目标上限
+              <input id="sugarLimitInput" inputmode="numeric" min="1" max="100" type="number" value="25">
+            </label>
+          </div>
+          <div class="budget-bar" aria-hidden="true">
+            <span id="sugarBudgetFill"></span>
+          </div>
+          <p class="budget-status" id="sugarBudgetStatus">今天还没有估算糖分。</p>
+        </section>
+
+        <section class="photo-capture" aria-labelledby="photoTitle">
+          <div>
+            <h3 id="photoTitle">拍照估算糖分</h3>
+            <p>拍食物或饮品，选择餐次和类别后写入今日记录。</p>
+          </div>
+          <label class="capture-button">
+            拍照估算糖分
+            <input id="photoInput" type="file" accept="image/*" capture="environment">
+          </label>
+        </section>
+
+        <section class="estimate-panel is-hidden" id="photoPreviewPanel" aria-labelledby="estimateTitle">
+          <div class="photo-preview" id="photoPreview">照片预览</div>
+          <p class="inline-error" id="photoError"></p>
+
+          <h3 id="estimateTitle">确认这次摄入</h3>
+          <p class="field-label">选择餐次</p>
+          <div class="chip-grid meal-grid" id="mealSlotGrid" aria-label="餐次"></div>
+
+          <p class="field-label">选择类别</p>
+          <div class="chip-grid" id="estimateCategoryGrid" aria-label="食物类别"></div>
+
+          <article class="estimate-result is-hidden" id="estimateResultCard">
+            <div>
+              <p class="risk-label" id="estimateRiskLabel">待确认</p>
+              <strong id="estimateRangeLabel">需要手动确认</strong>
+            </div>
+            <div class="number-grid">
+              <label>
+                最低估算
+                <input id="estimateMinInput" inputmode="numeric" min="0" max="200" type="number">
+              </label>
+              <label>
+                最高估算
+                <input id="estimateMaxInput" inputmode="numeric" min="0" max="200" type="number">
+              </label>
+            </div>
+            <p>照片只能估算，请按实际分量和配料修正。</p>
+            <div class="estimate-actions">
+              <button class="primary-button" id="writeEstimateBtn" type="button">写入今日记录</button>
+              <button class="ghost-button" id="retakePhotoBtn" type="button">重新拍照</button>
+            </div>
+          </article>
+        </section>
+
+        <section class="intake-section" aria-labelledby="intakeTitle">
+          <div class="section-heading compact-heading">
+            <div>
+              <p class="section-kicker">Intake</p>
+              <h3 id="intakeTitle">今日摄入记录</h3>
+            </div>
+          </div>
+          <div class="intake-list" id="intakeList"></div>
+        </section>
+
         <div class="segmented-control" role="group" aria-label="控糖结果">
           <button id="successBtn" type="button" data-value="success">成功</button>
           <button id="missBtn" type="button" data-value="miss">破戒</button>
@@ -68,7 +140,7 @@
 
         <label class="field">
           一句记录
-          <input id="sugarNoteInput" maxlength="48" placeholder="例如：下午想喝奶茶，换成无糖茶">
+          <input id="sugarNoteInput" maxlength="80" placeholder="例如：拍照估算：奶茶/甜饮，高糖风险，约 25-60g">
         </label>
       </section>
 
