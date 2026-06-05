@@ -2,7 +2,7 @@
 
 ## Goal
 
-Add an iPhone-first photo flow to the "控糖计划" app so the user can take a food photo, choose a food category, see an estimated sugar risk and sugar range, compare it against a daily sugar limit, then write the result into today's sugar-control record.
+Add an iPhone-first photo flow to the "控糖计划" app so the user can take a food photo, choose a meal slot and food category, see an estimated sugar risk and sugar range, compare daily accumulated sugar against a daily limit, then write the result into today's sugar-control record.
 
 This first version is not full automatic AI recognition. It uses the iPhone camera for capture and manual category confirmation for the estimate. The data model leaves room for cloud AI recognition later.
 
@@ -34,7 +34,14 @@ Expected behavior:
 
 ## Manual Category Estimate
 
-After a photo is selected, show category chips:
+After a photo is selected, show a meal slot selector:
+
+- 早餐
+- 午餐
+- 晚餐
+- 加餐/饮品
+
+Then show category chips:
 
 - 奶茶/甜饮
 - 甜点/糖果
@@ -113,21 +120,15 @@ Status logic:
 - If the lower bound is > 25g or the upper bound is > 25g: red / over limit
 - Unknown estimates should show "待确认" and should not calculate progress.
 
-Add a short reminder below the control:
-
-```text
-糖分只是痘痘诱因之一，也要关注睡眠、压力和护肤刺激。
-```
-
 ## Write-To-Record Behavior
 
 When the user taps "写入今日记录":
 
-- Store the photo estimate summary in today's record.
-- Add the estimate range to today's sugar intake estimate.
+- Add a new intake item to today's record.
+- Recalculate today's sugar intake estimate by summing every intake item's `sugarMin` and `sugarMax`.
 - Set today's sugar status:
   - high or medium-high risk sets `sugarStatus` to `miss`
-  - any estimate whose upper bound exceeds the daily limit sets `sugarStatus` to `miss`
+  - any accumulated estimate whose upper bound exceeds the daily limit sets `sugarStatus` to `miss`
   - medium or unknown risk does not overwrite an existing success/miss decision unless no decision exists
 - Add the mapped source to `sugarSources`.
 - Update `sugarNote` with a concise text summary:
@@ -138,21 +139,26 @@ The app should not force a medical or dietary judgment. It should frame the resu
 
 ## Data Model
 
-Extend each daily record with:
+Extend each daily record with multiple intake items:
 
 ```js
-photoEstimate: {
-  mode: "manual-photo",
-  category: "sweet-drink",
-  label: "奶茶/甜饮",
-  risk: "high",
-  riskLabel: "高糖风险",
-  sugarRange: "25-60g",
-  sugarMin: 25,
-  sugarMax: 60,
-  sourceId: "sweet-drink",
-  note: "照片只能估算，请按实际分量和配料修正。"
-}
+intakeItems: [
+  {
+    id: "2026-06-05T08:30:00.000Z",
+    mode: "manual-photo",
+    mealSlot: "breakfast",
+    mealLabel: "早餐",
+    category: "sweet-drink",
+    label: "奶茶/甜饮",
+    risk: "high",
+    riskLabel: "高糖风险",
+    sugarRange: "25-60g",
+    sugarMin: 25,
+    sugarMax: 60,
+    sourceId: "sweet-drink",
+    note: "照片只能估算，请按实际分量和配料修正。"
+  }
+]
 ```
 
 Also extend each daily record with sugar budget fields:
@@ -160,12 +166,21 @@ Also extend each daily record with sugar budget fields:
 ```js
 sugarBudget: {
   limit: 25,
-  estimatedMin: 25,
-  estimatedMax: 60
+  estimatedMin: 35,
+  estimatedMax: 82
 }
 ```
 
-The first version only needs one photo estimate per day. If the user takes another photo and writes it to the record, the app replaces the previous photo estimate and recalculates the sugar budget estimate from the current saved estimate. Multi-item daily accumulation can be added later after the basic flow proves useful.
+`estimatedMin` is the sum of every intake item's `sugarMin`. `estimatedMax` is the sum of every intake item's `sugarMax`.
+
+The first implementation should support multiple intake items per day. Items are grouped visually by meal slot:
+
+- 早餐
+- 午餐
+- 晚餐
+- 加餐/饮品
+
+The user should be able to delete an individual intake item if it was added by mistake. Editing an existing item can be added later; the first version can support delete + re-add.
 
 Do not persist the original image in `localStorage`.
 
@@ -189,14 +204,21 @@ The first implementation only uses `mode: "manual-photo"`.
 - If preview generation fails, still allow manual category selection.
 - If `localStorage` write fails, show the existing save failure text.
 - If the user selects "不确定/其它", require no extra fields; write a conservative note that manual confirmation is needed.
+- If deleting an intake item changes the accumulated estimate below the daily limit, do not automatically change `sugarStatus` back to success; leave the final daily decision to the user.
 
 ## UI Requirements
 
 - The camera control must be easy to tap on iPhone.
 - The photo preview should be compact and not dominate the page.
 - Category chips should fit iPhone widths without horizontal scrolling.
+- Meal slot controls should be easy to tap and should default to the likely current meal based on local time:
+  - before 10:30: 早餐
+  - 10:30-15:00: 午餐
+  - 15:00-20:30: 晚餐
+  - after 20:30: 加餐/饮品
 - The result card should sit inside the existing "今日控糖" section.
 - The daily sugar control card should sit in the same "今日控糖" section and remain visible without making the section feel crowded.
+- Today's intake list should show accumulated items grouped by meal slot with their sugar ranges.
 - The budget progress should communicate ranges honestly and avoid implying lab-grade precision.
 - Keep the existing bottom navigation unchanged for the first version.
 
@@ -209,7 +231,9 @@ Implementation should be verified by:
 - Selecting a local image file in desktop test mode to simulate iPhone capture.
 - Choosing "奶茶/甜饮" and confirming the result shows high risk and `25-60g`.
 - Editing the estimate range and confirming the daily sugar control card updates.
-- Writing the result to today's record and refreshing the page.
+- Writing breakfast, lunch, and dinner intake items to today's record and refreshing the page.
+- Confirming the daily sugar control card shows the accumulated min and max sugar estimate.
+- Deleting one intake item and confirming the accumulated estimate decreases.
 - Confirming the estimate summary persists while the image preview does not need to persist.
-- Confirming a result above 25g marks today's sugar status as miss.
+- Confirming an accumulated estimate above 25g marks today's sugar status as miss.
 - Confirming there are no console errors and no horizontal overflow at 390px width.
